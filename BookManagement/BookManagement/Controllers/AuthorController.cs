@@ -11,7 +11,7 @@ namespace BookManagement.Controllers
         // GET: Author
         public ActionResult Index()
         {
-            return View();
+            return View("Author");
         }
     }
 }

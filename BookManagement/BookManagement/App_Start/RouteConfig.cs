@@ -14,11 +14,11 @@ namespace BookManagement
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             //routing to Auther
-            routes.MapRoute(
-                name: "Author",
-                url: "Author",
-                defaults: new { controller = "Author", action = "Index", id = UrlParameter.Optional }
-            );
+            //routes.MapRoute(
+            //    name: "Author",
+            //    url: "Author",
+            //    defaults: new { controller = "Author", action = "Index", id = UrlParameter.Optional }
+            //);
 
             routes.MapRoute(
                 name: "Default",
