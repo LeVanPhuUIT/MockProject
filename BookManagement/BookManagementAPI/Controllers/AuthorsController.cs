@@ -101,6 +101,39 @@ namespace BookManagementAPI.Controllers
             return Ok(author);
         }
 
+        /// <summary>
+        /// Funtion Paging Author
+        /// GET: /api/Authors?currentPage=1&pageSize=10&searchString=test
+        /// </summary>
+        /// <param name="currentPage"> current page</param>
+        /// <param name="pageSize"> number record in page</param>
+        /// <returns>json pageInfo: {category: array record, total: total record of category}</returns>
+        [HttpGet]
+        //[Route("api/Authors/{currentPage}/{pageSize}/{searchString}")]
+        public IHttpActionResult PagingAuthor(int currentPage, int pageSize, string searchString)
+        {
+            int skip = (currentPage - 1) * pageSize;
+            object pageInfo = null;
+
+            if (String.IsNullOrEmpty(searchString))
+            {
+                pageInfo = new
+                {
+                    author = db.Authors.OrderBy(x => x.AuthorName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    total = db.Authors.Count()
+                };
+            }
+            else
+            {
+                pageInfo = new
+                {
+                    author = db.Authors.Where(x => x.AuthorName.Contains(searchString)).OrderBy(x => x.AuthorName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    total = db.Authors.Count()
+                };
+            }
+            return Ok(pageInfo);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

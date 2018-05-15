@@ -114,5 +114,38 @@ namespace BookManagementAPI.Controllers
         {
             return db.Categories.Count(e => e.CateID == id) > 0;
         }
+
+        /// <summary>
+        /// Funtion Paging Category
+        /// GET: /api/Categories?currentPage=1&pageSize=10&searchString=test
+        /// </summary>
+        /// <param name="currentPage"> current page</param>
+        /// <param name="pageSize"> number record in page</param>
+        /// <returns>json pageInfo: {category: array record, total: total record of category}</returns>
+        [HttpGet]
+        //[Route("api/Categories/{currentPage}/{pageSize}/{searchString}")]
+        public IHttpActionResult PagingCategory(int currentPage, int pageSize, string searchString)
+        {
+            int skip = (currentPage - 1) * pageSize;
+            object pageInfo = null;
+            
+            if (String.IsNullOrEmpty(searchString))
+            {
+                pageInfo = new
+                {
+                    category = db.Categories.OrderBy(x => x.CateName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    total = db.Categories.Count()
+                };
+            }
+            else
+            {
+                pageInfo = new
+                {
+                    category = db.Categories.Where(x => x.CateName.Contains(searchString)).OrderBy(x => x.CateName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    total = db.Categories.Count()
+                };
+            }
+            return Ok(pageInfo);
+        }
     }
 }
