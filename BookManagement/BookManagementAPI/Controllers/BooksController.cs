@@ -9,6 +9,9 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BookManagementAPI.Models;
+using System.Web;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace BookManagementAPI.Controllers
 {
@@ -118,7 +121,7 @@ namespace BookManagementAPI.Controllers
         /// <returns>json pageInfo: {category: array record, total: total record of category}</returns>
         [HttpGet]
         //[Route("api/Books/{currentPage}/{pageSize}/{searchString}")]
-        public IHttpActionResult PagingAuthor(int currentPage, int pageSize, string searchString)
+        public IHttpActionResult PagingBook(int currentPage, int pageSize, string searchString)
         {
             int skip = (currentPage - 1) * pageSize;
             object pageInfo = null;
@@ -135,11 +138,47 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    author = db.Books.Where(x => x.Title.Contains(searchString)).OrderBy(x => x.Title).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    book = db.Books.Where(x => x.Title.Contains(searchString)).OrderBy(x => x.Title).AsQueryable().Skip(skip).Take(pageSize).ToList(),
                     total = db.Books.Count()
                 };
             }
             return Ok(pageInfo);
+        }
+
+        [HttpPost]
+        [ActionName("UploadDishImage")]
+        public HttpResponseMessage UploadJsonFile()
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                }
+            }
+            return response;
+        }
+
+        //refer https://www.youtube.com/watch?v=c61wr1ZsHzY
+        [HttpPost]
+        [Route("api/Books/UploadImage")]
+        public HttpResponseMessage UploadImage()
+        {
+            string imageName = null;
+            var httpRequest = HttpContext.Current.Request;
+            //Upload Image
+            var postedFile = httpRequest.Files["Image"];
+            //Create custom filename
+            imageName = new String(Path.GetFileNameWithoutExtension(postedFile.FileName).Take(10).ToArray()).Replace(" ", "-");
+            imageName = imageName /*+ DateTime.Now.ToString("yymmssfff")*/ + Path.GetExtension(postedFile.FileName);
+            var filePath = HttpContext.Current.Server.MapPath("~/Image/" + imageName);
+            postedFile.SaveAs(filePath);
+
+            return Request.CreateResponse(HttpStatusCode.Created);
         }
 
         protected override void Dispose(bool disposing)

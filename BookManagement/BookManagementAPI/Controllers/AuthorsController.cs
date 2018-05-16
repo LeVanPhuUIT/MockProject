@@ -17,9 +17,15 @@ namespace BookManagementAPI.Controllers
         private BookManagementPhuLV2Entities db = new BookManagementPhuLV2Entities();
 
         // GET: api/Authors
-        public IQueryable<Author> GetAuthors()
+        [ResponseType(typeof(Author))]
+        public IHttpActionResult GetAuthorName()
         {
-            return db.Authors;
+            object authorInfo = new
+            {
+                AuthorInfo = db.Authors.Select(x =>
+                new { x.AuthorID, x.AuthorName }).ToList()
+            };
+            return Ok(authorInfo);
         }
 
         // GET: api/Authors/5
