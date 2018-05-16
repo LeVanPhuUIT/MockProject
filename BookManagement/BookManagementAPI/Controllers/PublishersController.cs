@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BookManagementAPI.Models;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace BookManagementAPI.Controllers
 {
@@ -17,9 +19,15 @@ namespace BookManagementAPI.Controllers
         private BookManagementPhuLV2Entities db = new BookManagementPhuLV2Entities();
 
         // GET: api/Publishers
-        public IQueryable<Publisher> GetPublishers()
+        [ResponseType(typeof(Publisher))]
+        public IHttpActionResult GetPublisherName()
         {
-            return db.Publishers;
+            object publisherInfo = new
+            {
+                PublisherInfo = db.Publishers.Select(x =>
+                new { x.PubID, x.Name }).ToList()
+            };
+            return Ok(publisherInfo);
         }
 
         // GET: api/Publishers/5
@@ -133,6 +141,7 @@ namespace BookManagementAPI.Controllers
             }
             return Ok(pageInfo);
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

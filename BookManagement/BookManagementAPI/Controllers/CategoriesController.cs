@@ -17,9 +17,14 @@ namespace BookManagementAPI.Controllers
         private BookManagementPhuLV2Entities db = new BookManagementPhuLV2Entities();
 
         // GET: api/Categories
-        public IQueryable<Category> GetCategories()
+        public IHttpActionResult GetCategoriesName()
         {
-            return db.Categories;
+            object cateInfo = new
+            {
+                CateInfo = db.Categories.Select(x =>
+                new {x.CateID, x.CateName }).ToList()
+            };
+        return Ok(cateInfo);
         }
 
         // GET: api/Categories/5
