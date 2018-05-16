@@ -24,6 +24,7 @@
     <Property Name="CreateDay" Type="date" Nullable="false" />
     <Property Name="ModifiedDay" Type="date" Nullable="false" />
     <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="Status" Type="nvarchar" MaxLength="30" />
   </EntityType>
   <EntityType Name="Category">
     <Key>

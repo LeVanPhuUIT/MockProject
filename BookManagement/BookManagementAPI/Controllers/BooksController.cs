@@ -82,6 +82,7 @@ namespace BookManagementAPI.Controllers
         }
 
         // POST: api/Books
+        [HttpPost]
         [ResponseType(typeof(Book))]
         public IHttpActionResult PostBook(Book book)
         {

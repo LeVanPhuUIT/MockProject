@@ -32,6 +32,7 @@ namespace BookManagementAPI.Models
         public System.DateTime CreateDay { get; set; }
         public System.DateTime ModifiedDay { get; set; }
         public bool IsActive { get; set; }
+        public string Status { get; set; }
     
         public virtual Author Author { get; set; }
         public virtual Category Category { get; set; }

@@ -13,6 +13,7 @@
     <EntitySetMapping Name="Books">
       <EntityTypeMapping TypeName="BookManagementPhuLV2Model.Book">
         <MappingFragment StoreEntitySet="Book">
+          <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
           <ScalarProperty Name="Title" ColumnName="Title" />
           <ScalarProperty Name="CateID" ColumnName="CateID" />
