@@ -14,6 +14,7 @@ namespace BookManagementAPI
         public static void Register(HttpConfiguration config)
         {
             config.EnableCors(new EnableCorsAttribute("*", methods: "*", headers: "*"));
+
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
@@ -31,6 +32,7 @@ namespace BookManagementAPI
             var json = config.Formatters.JsonFormatter;
             json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
 
         }
     }

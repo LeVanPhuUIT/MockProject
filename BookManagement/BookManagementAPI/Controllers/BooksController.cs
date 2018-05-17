@@ -90,6 +90,8 @@ namespace BookManagementAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+            book.CreateDay = DateTime.Today;
+            book.ModifiedDay = DateTime.Today;
 
             db.Books.Add(book);
             db.SaveChanges();
@@ -131,7 +133,18 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    book = db.Books.OrderBy(x => x.Title).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    book = db.Books.OrderBy(x => x.Title).AsQueryable().Select(x => new {
+                        BookID = x.BookID,
+                        AuthorID = x.AuthorID,
+                        CateID = x.CateID,
+                        PubID = x.PubID,
+                        Title = x.Title,
+                        Price = x.Price,
+                        Quantity = x.Quantity,
+                        ImgUrl = x.ImgUrl,
+                        Status = x.Status,
+                        Summary = x.Summary,
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Books.Count()
                 };
             }
@@ -139,30 +152,37 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    book = db.Books.Where(x => x.Title.Contains(searchString)).OrderBy(x => x.Title).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    book = db.Books.Where(x => x.Title.Contains(searchString)).OrderBy(x => x.Title).AsQueryable().
+                    Select(x => new {
+                        Title = x.Title,
+                        Price = x.Price,
+                        Quantity = x.Quantity,
+                        ImgUrl = x.ImgUrl,
+                        Status = x.Status
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Books.Count()
                 };
             }
             return Ok(pageInfo);
         }
 
-        [HttpPost]
-        [ActionName("UploadDishImage")]
-        public HttpResponseMessage UploadJsonFile()
-        {
-            HttpResponseMessage response = new HttpResponseMessage();
-            var httpRequest = HttpContext.Current.Request;
-            if (httpRequest.Files.Count > 0)
-            {
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
-                    postedFile.SaveAs(filePath);
-                }
-            }
-            return response;
-        }
+        //[HttpPost]
+        //[ActionName("UploadDishImage")]
+        //public HttpResponseMessage UploadJsonFile()
+        //{
+        //    HttpResponseMessage response = new HttpResponseMessage();
+        //    var httpRequest = HttpContext.Current.Request;
+        //    if (httpRequest.Files.Count > 0)
+        //    {
+        //        foreach (string file in httpRequest.Files)
+        //        {
+        //            var postedFile = httpRequest.Files[file];
+        //            var filePath = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
+        //            postedFile.SaveAs(filePath);
+        //        }
+        //    }
+        //    return response;
+        //}
 
         //refer https://www.youtube.com/watch?v=c61wr1ZsHzY
         [HttpPost]
