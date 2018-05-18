@@ -127,7 +127,11 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    publisher = db.Publishers.OrderBy(x => x.Name).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    publisher = db.Publishers.OrderBy(x => x.Name).AsQueryable().Select(x => new {
+                        PubID = x.PubID,
+                        Name = x.Name,
+                        Description = x.Description
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Publishers.Count()
                 };
             }
@@ -135,7 +139,11 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    publisher = db.Publishers.Where(x => x.Name.Contains(searchString)).OrderBy(x => x.Name).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    publisher = db.Publishers.Where(x => x.Name.Contains(searchString)).OrderBy(x => x.Name).AsQueryable().Select(x => new {
+                        PubID = x.PubID,
+                        Name = x.Name,
+                        Description = x.Description
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Publishers.Count()
                 };
             }

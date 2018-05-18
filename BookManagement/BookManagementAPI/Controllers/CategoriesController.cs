@@ -138,7 +138,11 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    category = db.Categories.OrderBy(x => x.CateName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    category = db.Categories.OrderBy(x => x.CateName).AsQueryable().Select(x => new {
+                        CateID = x.CateID,
+                        CateName = x.CateName,
+                        Description = x.Description
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Categories.Count()
                 };
             }
@@ -146,7 +150,11 @@ namespace BookManagementAPI.Controllers
             {
                 pageInfo = new
                 {
-                    category = db.Categories.Where(x => x.CateName.Contains(searchString)).OrderBy(x => x.CateName).AsQueryable().Skip(skip).Take(pageSize).ToList(),
+                    category = db.Categories.Where(x => x.CateName.Contains(searchString)).OrderBy(x => x.CateName).AsQueryable().Select(x => new {
+                        CateID = x.CateID,
+                        CateName = x.CateName,
+                        Description = x.Description
+                    }).Skip(skip).Take(pageSize).ToList(),
                     total = db.Categories.Count()
                 };
             }
